@@ -1,8 +1,11 @@
 ---
 title: Budgets campagnes
-api: GET https://roapix.up.railway.app/api/v1/budgets
-description: Liste les budgets journaliers configurés pour chaque campagne Meta.
+description: Lire, modifier et supprimer les budgets journaliers de vos campagnes Meta.
 ---
+
+## Lister les budgets
+
+<api>GET https://roapix.up.railway.app/api/v1/budgets</api>
 
 <ParamField header="Authorization" type="string" required>
   `Bearer roapix_votre_clé`
@@ -78,6 +81,95 @@ console.log(`${active.length} campagnes actives`)
   ],
   "workspace_id": "a1b2c3d4-...",
   "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>
+
+---
+
+## Modifier le budget d'une campagne
+
+<api>PATCH https://roapix.up.railway.app/api/v1/budgets/:campaignId</api>
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="campaignId" type="string" required>
+  ID Meta de la campagne (ex : `120213456789`)
+</ParamField>
+
+<ParamField body="daily_budget" type="number" required>
+  Nouveau budget journalier en USD
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X PATCH "https://roapix.up.railway.app/api/v1/budgets/120213456789" \
+  -H "Authorization: Bearer roapix_votre_clé" \
+  -H "Content-Type: application/json" \
+  -d '{"daily_budget": 350.00}'
+```
+
+```python Python
+import requests
+
+r = requests.patch(
+    "https://roapix.up.railway.app/api/v1/budgets/120213456789",
+    json={"daily_budget": 350.00},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+print(r.json()["data"])
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "campaign_id": "120213456789",
+    "campaign_name": "Felipet Cat — FR — Acquisition",
+    "daily_budget": 350.00,
+    "effective_status": "ACTIVE",
+    "updated_at": "2026-03-23T20:00:00.000Z"
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>
+
+---
+
+## Supprimer une campagne des budgets
+
+<api>DELETE https://roapix.up.railway.app/api/v1/budgets/:campaignId</api>
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="campaignId" type="string" required>
+  ID Meta de la campagne à supprimer
+</ParamField>
+
+<Warning>
+  La suppression retire la campagne de la base Roapix. Elle sera recréée au prochain sync Meta.
+</Warning>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE "https://roapix.up.railway.app/api/v1/budgets/120213456789" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": { "deleted": true, "campaign_id": "120213456789" },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
 }
 ```
 </ResponseExample>
