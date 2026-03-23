@@ -1,0 +1,93 @@
+---
+title: Script Python
+description: Exemples pratiques pour exploiter l'API Roapix en Python.
+---
+
+## Installation
+
+```bash
+pip install requests
+```
+
+## Rapport complet en CSV
+
+```python
+import requests
+import csv
+from datetime import date
+
+API_KEY = "roapix_votre_clé"
+BASE = "https://roapix.up.railway.app/api/v1"
+HEADERS = {"Authorization": f"Bearer {API_KEY}"}
+
+# Fetch data
+spend = requests.get(f"{BASE}/spend", params={"date_preset": "last_30d"}, headers=HEADERS).json()["data"]
+winners = requests.get(f"{BASE}/winners", params={"date_preset": "last_30d", "limit": 20}, headers=HEADERS).json()["data"]
+
+# Print summary
+print(f"Period: {spend['since']} → {spend['until']}")
+print(f"Total spend: ${spend['total_spend']:,.2f}")
+print(f"\nBy market:")
+for m in spend["by_market"]:
+    print(f"  {m['market']}: ${m['spend']:,.2f}")
+
+# Export winners to CSV
+with open(f"winners_{date.today()}.csv", "w", newline="") as f:
+    w = csv.DictWriter(f, fieldnames=["rank","ad_name","spend","roas","ctr","purchases"])
+    w.writeheader()
+    w.writerows(winners)
+print(f"\nWinners exported to winners_{date.today()}.csv")
+```
+
+## Alertes ROAS personnalisées
+
+```python
+import requests
+
+def check_roas_alert(min_roas=2.0):
+    r = requests.get(
+        "https://roapix.up.railway.app/api/v1/summary",
+        params={"date_preset": "today"},
+        headers={"Authorization": "Bearer roapix_votre_clé"}
+    )
+    d = r.json()["data"]
+    if d["roas"] and d["roas"] < min_roas:
+        print(f"⚠️  ROAS alert: {d['roas']}x < {min_roas}x threshold")
+        print(f"   Spend: ${d['spend']:,.0f} | Revenue: ${d['revenue']:,.0f}")
+        # Send Slack notification, email, etc.
+    else:
+        print(f"✅ ROAS OK: {d['roas']}x")
+
+check_roas_alert(min_roas=2.5)
+```
+
+## Google Sheets via gspread
+
+```python
+import requests
+import gspread
+from google.oauth2.service_account import Credentials
+
+ROAPIX_KEY = "roapix_votre_clé"
+
+# Fetch last 7 days
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/spend",
+    params={"date_preset": "last_7d"},
+    headers={"Authorization": f"Bearer {ROAPIX_KEY}"}
+)
+data = r.json()["data"]
+
+# Write to Google Sheets
+creds = Credentials.from_service_account_file("service_account.json",
+    scopes=["https://spreadsheets.google.com/feeds"])
+gc = gspread.authorize(creds)
+sheet = gc.open("Roapix Report").sheet1
+
+sheet.clear()
+sheet.append_row(["Market", "Spend"])
+for m in data["by_market"]:
+    sheet.append_row([m["market"], m["spend"]])
+
+print("Google Sheet updated ✓")
+```

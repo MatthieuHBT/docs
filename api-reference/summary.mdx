@@ -1,0 +1,77 @@
+---
+title: Résumé global
+api: GET https://roapix.up.railway.app/api/v1/summary
+description: Un seul appel — spend, revenue, ROAS et top publicité sur la période.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField query="date_preset" type="string">
+  `today` | `yesterday` | `last_7d` | `last_30d`
+</ParamField>
+
+<ParamField query="since" type="string">
+  Date de début `YYYY-MM-DD`
+</ParamField>
+
+<ParamField query="until" type="string">
+  Date de fin `YYYY-MM-DD`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriétés">
+    <ResponseField name="since" type="string | null">Date de début</ResponseField>
+    <ResponseField name="until" type="string | null">Date de fin</ResponseField>
+    <ResponseField name="spend" type="number">Dépense Meta totale (USD)</ResponseField>
+    <ResponseField name="revenue" type="number">Revenu Shopify total (USD)</ResponseField>
+    <ResponseField name="roas" type="number | null">ROAS global = revenue / spend</ResponseField>
+    <ResponseField name="orders" type="number | null">Nombre de commandes Shopify</ResponseField>
+    <ResponseField name="top_ad" type="object | null">
+      Publicité avec la plus grande dépense : `{ name, spend }`
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash Aujourd'hui
+curl "https://roapix.up.railway.app/api/v1/summary?date_preset=today" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Rapport quotidien automatisé
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/summary",
+    params={"date_preset": "yesterday"},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+d = r.json()["data"]
+print(f"Spend: ${d['spend']:,.0f} | Revenue: ${d['revenue']:,.0f} | ROAS: {d['roas']}x")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "since": "2026-03-22",
+    "until": "2026-03-22",
+    "spend": 1240.00,
+    "revenue": 3844.00,
+    "roas": 3.1,
+    "orders": 48,
+    "top_ad": {
+      "name": "Felipet Cat — Video UGC v3",
+      "spend": 620.00
+    }
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T08:00:00.000Z"
+}
+```
+</ResponseExample>

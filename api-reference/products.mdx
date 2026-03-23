@@ -1,0 +1,32 @@
+---
+title: Produits
+api: GET https://roapix.up.railway.app/api/v1/products
+description: Liste les produits détectés dans vos campagnes Meta.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array[string]">
+  Liste des noms de produits uniques, triés alphabétiquement.
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/products \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": ["Felipet Cat", "Felipet Dog"],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

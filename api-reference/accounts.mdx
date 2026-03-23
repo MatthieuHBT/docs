@@ -1,0 +1,39 @@
+---
+title: Comptes publicitaires
+api: GET https://roapix.up.railway.app/api/v1/accounts
+description: Liste les comptes Meta Ads connectés à votre workspace.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  Liste des comptes publicitaires uniques.
+  <Expandable title="Propriétés de chaque item">
+    <ResponseField name="account_id" type="string">ID Meta du compte (ex: `act_123456`)</ResponseField>
+    <ResponseField name="account_name" type="string">Nom affiché du compte</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/accounts \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    { "account_id": "act_111222333", "account_name": "FR Compte Principal" },
+    { "account_id": "act_444555666", "account_name": "DE Compte" }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

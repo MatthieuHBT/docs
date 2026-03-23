@@ -1,0 +1,164 @@
+---
+title: Agents IA
+description: Connectez Claude, ChatGPT ou votre propre agent IA à vos données Roapix.
+---
+
+L'API Roapix peut être utilisée directement par des agents IA — pour analyser vos performances, détecter des anomalies, générer des recommandations ou piloter vos campagnes.
+
+## Claude via MCP
+
+Le protocole MCP (Model Context Protocol) permet à Claude d'appeler des outils externes. Vous pouvez exposer l'API Roapix comme outil MCP.
+
+### Exemple de tool definition (MCP)
+
+```json
+{
+  "name": "get_roapix_summary",
+  "description": "Fetch advertising and revenue summary from Roapix for a given date range.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "date_preset": {
+        "type": "string",
+        "enum": ["today", "yesterday", "last_7d", "last_30d"],
+        "description": "Preset date range"
+      }
+    }
+  }
+}
+```
+
+### Handler Python
+
+```python
+import requests
+
+def get_roapix_summary(date_preset: str = "yesterday") -> dict:
+    """Appelle l'API Roapix et retourne le résumé de performance."""
+    r = requests.get(
+        "https://roapix.up.railway.app/api/v1/summary",
+        params={"date_preset": date_preset},
+        headers={"Authorization": "Bearer roapix_votre_clé"}
+    )
+    return r.json()["data"]
+```
+
+### Prompt système recommandé
+
+```
+You are a performance marketing analyst. You have access to the get_roapix_summary tool
+to fetch real-time advertising data (Meta spend, Shopify revenue, ROAS).
+When asked about performance, always fetch fresh data before answering.
+Flag any ROAS below 2x or spend above daily budget as anomalies.
+```
+
+---
+
+## ChatGPT via Custom Actions
+
+Dans un GPT personnalisé, ajoutez une **Custom Action** avec ce schema OpenAPI :
+
+```yaml
+openapi: 3.1.0
+info:
+  title: Roapix API
+  version: v1
+servers:
+  - url: https://roapix.up.railway.app/api/v1
+paths:
+  /summary:
+    get:
+      operationId: getSummary
+      summary: Get spend, revenue and ROAS summary
+      parameters:
+        - name: date_preset
+          in: query
+          schema:
+            type: string
+            enum: [today, yesterday, last_7d, last_30d]
+  /winners:
+    get:
+      operationId: getWinners
+      summary: Get top performing ads
+      parameters:
+        - name: date_preset
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+securitySchemes:
+  bearerAuth:
+    type: http
+    scheme: bearer
+```
+
+Dans **Authentication**, sélectionnez **API Key** et entrez votre clé Roapix.
+
+---
+
+## Agent Python autonome
+
+Un agent Python minimaliste qui analyse les performances et génère des recommandations :
+
+```python
+import anthropic
+import requests
+
+client = anthropic.Anthropic(api_key="sk-ant-...")
+ROAPIX_KEY = "roapix_votre_clé"
+
+tools = [
+    {
+        "name": "get_summary",
+        "description": "Get spend, revenue, ROAS and top ad for a period",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "date_preset": {"type": "string", "enum": ["today", "yesterday", "last_7d", "last_30d"]}
+            },
+            "required": ["date_preset"]
+        }
+    },
+    {
+        "name": "get_winners",
+        "description": "Get top performing ads ranked by spend with ROAS",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "date_preset": {"type": "string"},
+                "limit": {"type": "integer", "default": 10}
+            }
+        }
+    }
+]
+
+def call_tool(name, inputs):
+    if name == "get_summary":
+        r = requests.get(f"https://roapix.up.railway.app/api/v1/summary",
+            params=inputs, headers={"Authorization": f"Bearer {ROAPIX_KEY}"})
+        return r.json()["data"]
+    if name == "get_winners":
+        r = requests.get(f"https://roapix.up.railway.app/api/v1/winners",
+            params=inputs, headers={"Authorization": f"Bearer {ROAPIX_KEY}"})
+        return r.json()["data"]
+
+def analyze():
+    messages = [{"role": "user", "content": "Analyze yesterday's performance and give 3 actionable recommendations."}]
+    while True:
+        resp = client.messages.create(model="claude-opus-4-6", max_tokens=1024, tools=tools, messages=messages)
+        if resp.stop_reason == "end_turn":
+            return next(b.text for b in resp.content if hasattr(b, "text"))
+        for block in resp.content:
+            if block.type == "tool_use":
+                result = call_tool(block.name, block.input)
+                messages += [
+                    {"role": "assistant", "content": resp.content},
+                    {"role": "user", "content": [{"type": "tool_result", "tool_use_id": block.id, "content": str(result)}]}
+                ]
+                break
+
+print(analyze())
+```

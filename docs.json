@@ -32,14 +32,22 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
+        "tab": "Getting Started",
         "groups": [
           {
-            "group": "Getting Started",
+            "group": "Introduction",
             "pages": [
               "introduction",
               "authentication",
               "errors"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/zapier-make",
+              "guides/ai-agents",
+              "guides/python"
             ]
           }
         ]
@@ -48,14 +56,39 @@
         "tab": "API Reference",
         "groups": [
           {
-            "group": "Endpoints",
+            "group": "Workspace",
             "pages": [
               "api-reference/me",
+              "api-reference/summary"
+            ]
+          },
+          {
+            "group": "Advertising",
+            "pages": [
               "api-reference/spend",
-              "api-reference/revenue",
-              "api-reference/winners",
               "api-reference/budgets",
-              "api-reference/daily-kpi"
+              "api-reference/winners",
+              "api-reference/accounts",
+              "api-reference/products"
+            ]
+          },
+          {
+            "group": "Revenue",
+            "pages": [
+              "api-reference/revenue"
+            ]
+          },
+          {
+            "group": "Operations",
+            "pages": [
+              "api-reference/daily-kpi",
+              "api-reference/daily-kpi-write"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks"
             ]
           }
         ]

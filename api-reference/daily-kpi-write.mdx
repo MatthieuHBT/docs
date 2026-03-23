@@ -1,0 +1,98 @@
+---
+title: Créer une entrée KPI
+api: POST https://roapix.up.railway.app/api/v1/daily-kpi
+description: Enregistre une entrée KPI journalière depuis un script externe ou outil tiers.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+## Body
+
+<ParamField body="date" type="string" required>
+  Date de l'entrée au format `YYYY-MM-DD`
+</ParamField>
+
+<ParamField body="employee_user_id" type="string" required>
+  UUID de l'employé (récupérable via `/api/v1/me` ou l'Admin)
+</ParamField>
+
+<ParamField body="role" type="string" required>
+  Rôle : `ADS_LAUNCHER` | `TRANSLATOR` | `COPY_PASTER` | `AD_CREATOR`
+</ParamField>
+
+<ParamField body="product_name" type="string" required>
+  Nom du produit (ex : `Felipet Cat`)
+</ParamField>
+
+<ParamField body="target" type="string" required>
+  Cible : `CAT` | `DOG` | `PET`
+</ParamField>
+
+<ParamField body="market" type="string">
+  Marché (code pays, ex : `FR`). Obligatoire pour `ADS_LAUNCHER` et `TRANSLATOR`.
+</ParamField>
+
+<ParamField body="count" type="number" required>
+  Nombre d'actions réalisées (> 0)
+</ParamField>
+
+## Réponse
+
+Retourne l'entrée créée.
+
+<RequestExample>
+```bash cURL
+curl -X POST https://roapix.up.railway.app/api/v1/daily-kpi \
+  -H "Authorization: Bearer roapix_votre_clé" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "date": "2026-03-23",
+    "employee_user_id": "uuid-aymeric",
+    "role": "ADS_LAUNCHER",
+    "product_name": "Felipet Cat",
+    "target": "CAT",
+    "market": "FR",
+    "count": 5
+  }'
+```
+
+```python Python
+import requests
+
+r = requests.post(
+    "https://roapix.up.railway.app/api/v1/daily-kpi",
+    json={
+        "date": "2026-03-23",
+        "employee_user_id": "uuid-aymeric",
+        "role": "ADS_LAUNCHER",
+        "product_name": "Felipet Cat",
+        "target": "CAT",
+        "market": "FR",
+        "count": 5
+    },
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+print(r.json())
+```
+</RequestExample>
+
+<ResponseExample>
+```json 201
+{
+  "data": {
+    "id": "uuid-...",
+    "entry_date": "2026-03-23",
+    "role": "ADS_LAUNCHER",
+    "product_name": "Felipet Cat",
+    "target": "CAT",
+    "market": "FR",
+    "count": 5,
+    "created_at": "2026-03-23T14:30:00.000Z"
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:30:00.000Z"
+}
+```
+</ResponseExample>

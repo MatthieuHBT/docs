@@ -1,0 +1,55 @@
+---
+title: Zapier & Make
+description: Connectez Roapix à vos workflows d'automatisation no-code.
+---
+
+## Rapport quotidien Slack via Make
+
+Ce scénario envoie automatiquement un résumé Roapix dans Slack chaque matin.
+
+<Steps>
+  <Step title="Créer un scénario dans Make">
+    Ajoutez un module **Schedule** qui se déclenche chaque jour à 8h.
+  </Step>
+  <Step title="Appeler l'API Roapix">
+    Ajoutez un module **HTTP → Make a request** :
+
+    - **URL** : `https://roapix.up.railway.app/api/v1/summary?date_preset=yesterday`
+    - **Method** : GET
+    - **Headers** : `Authorization: Bearer roapix_votre_clé`
+  </Step>
+  <Step title="Envoyer dans Slack">
+    Ajoutez un module **Slack → Create a Message** avec le message :
+
+    ```
+    📊 Rapport du {{yesterday}}
+    💸 Spend : ${{data.spend}}
+    💰 Revenue : ${{data.revenue}}
+    📈 ROAS : {{data.roas}}x
+    🏆 Top pub : {{data.top_ad.name}}
+    ```
+  </Step>
+</Steps>
+
+## Webhook Make (push automatique)
+
+Plutôt que de scheduler, utilisez un webhook pour que Roapix pousse les données dès qu'un sync se termine :
+
+1. Dans Make, créez un scénario avec un module **Webhooks → Custom webhook**
+2. Copiez l'URL générée (ex: `https://hook.make.com/abc123`)
+3. Enregistrez-la dans Roapix :
+
+```bash
+curl -X POST https://roapix.up.railway.app/api/v1/webhooks \
+  -H "Authorization: Bearer roapix_votre_clé" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://hook.make.com/abc123", "events": ["sync.complete"]}'
+```
+
+Roapix appellera automatiquement votre webhook après chaque sync.
+
+## Zapier
+
+Dans Zapier, utilisez le trigger **Webhooks by Zapier → Catch Hook** puis suivez la même logique pour enregistrer l'URL dans Roapix.
+
+Pour un polling, utilisez **Schedule** + **Webhooks by Zapier → GET** vers `/api/v1/summary`.
