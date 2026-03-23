@@ -1,0 +1,81 @@
+---
+title: Historique des syncs
+api: GET https://roapix.up.railway.app/api/v1/sync-history
+description: Retourne l'historique des synchronisations Meta — pour savoir si les données sont à jour.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField query="limit" type="number" default="10">
+  Nombre de syncs à retourner. Max : `100`.
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  <Expandable title="Propriétés de chaque sync">
+    <ResponseField name="id" type="string">UUID du sync</ResponseField>
+    <ResponseField name="synced_at" type="string">Date et heure du sync (ISO 8601)</ResponseField>
+    <ResponseField name="date_since" type="string">Début de la période synchronisée</ResponseField>
+    <ResponseField name="date_until" type="string">Fin de la période synchronisée</ResponseField>
+    <ResponseField name="status" type="string">`success` ou `error`</ResponseField>
+    <ResponseField name="campaigns_count" type="number">Nombre de lignes de campagnes importées</ResponseField>
+    <ResponseField name="error_message" type="string | null">Message d'erreur si le sync a échoué</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash Dernier sync
+curl "https://roapix.up.railway.app/api/v1/sync-history?limit=1" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Vérifier la fraîcheur des données
+import requests
+from datetime import datetime, timezone, timedelta
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/sync-history",
+    params={"limit": 1},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+last = r.json()["data"][0]
+synced = datetime.fromisoformat(last["synced_at"].replace("Z", "+00:00"))
+age = datetime.now(timezone.utc) - synced
+if age > timedelta(hours=6):
+    print(f"⚠️  Données vieilles de {age}. Penser à syncer.")
+else:
+    print(f"✅ Données fraîches — dernier sync il y a {age}")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "id": "sync-uuid-...",
+      "synced_at": "2026-03-23T18:00:00.000Z",
+      "date_since": "2026-03-23",
+      "date_until": "2026-03-23",
+      "status": "success",
+      "campaigns_count": 142,
+      "error_message": null
+    },
+    {
+      "id": "sync-uuid-2...",
+      "synced_at": "2026-03-22T18:00:00.000Z",
+      "date_since": "2026-03-22",
+      "date_until": "2026-03-22",
+      "status": "success",
+      "campaigns_count": 138,
+      "error_message": null
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

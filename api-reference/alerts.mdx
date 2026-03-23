@@ -1,0 +1,53 @@
+---
+title: Alertes
+api: GET https://roapix.up.railway.app/api/v1/alerts
+description: Liste les règles d'alertes configurées dans votre workspace.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  <Expandable title="Propriétés de chaque alerte">
+    <ResponseField name="id" type="string">UUID de la règle</ResponseField>
+    <ResponseField name="alert_type" type="string">Type d'alerte (ex : `roas_below`, `spend_above`, `daily_report`)</ResponseField>
+    <ResponseField name="threshold" type="number | null">Seuil déclencheur (ROAS minimum, budget maximum...)</ResponseField>
+    <ResponseField name="channels" type="array[string]">Canaux de notification (`slack`, `email`)</ResponseField>
+    <ResponseField name="days_of_week" type="array[number] | null">Jours d'envoi (0=dim, 1=lun... 6=sam). `null` = tous les jours.</ResponseField>
+    <ResponseField name="send_hour" type="number">Heure d'envoi (0-23)</ResponseField>
+    <ResponseField name="is_active" type="boolean">Alerte active ou non</ResponseField>
+    <ResponseField name="last_fired_at" type="string | null">Dernière fois déclenchée</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/alerts \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "id": "alert-uuid-...",
+      "alert_type": "roas_below",
+      "threshold": 2.0,
+      "channels": ["slack", "email"],
+      "days_of_week": null,
+      "send_hour": 9,
+      "is_active": true,
+      "last_fired_at": "2026-03-22T09:00:00.000Z",
+      "created_at": "2026-02-01T00:00:00.000Z"
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

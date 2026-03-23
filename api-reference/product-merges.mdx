@@ -1,0 +1,42 @@
+---
+title: Fusions de produits
+api: GET https://roapix.up.railway.app/api/v1/product-merges
+description: Liste les alias de produits configurés — utile pour comprendre comment les noms sont normalisés.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+Quand plusieurs noms de campagnes font référence au même produit (ex : `Felipet Cat FR`, `felipet-cat`, `FC`), les fusions de produits les unifient sous un nom canonique.
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  <Expandable title="Propriétés de chaque fusion">
+    <ResponseField name="alias" type="string">Nom de campagne d'origine</ResponseField>
+    <ResponseField name="canonical" type="string">Nom canonique unifié</ResponseField>
+    <ResponseField name="created_at" type="string">Date de création</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/product-merges \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    { "alias": "FC", "canonical": "Felipet Cat", "created_at": "2026-02-01T00:00:00.000Z" },
+    { "alias": "felipet-cat", "canonical": "Felipet Cat", "created_at": "2026-02-01T00:00:00.000Z" },
+    { "alias": "FD", "canonical": "Felipet Dog", "created_at": "2026-02-15T00:00:00.000Z" }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

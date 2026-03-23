@@ -1,0 +1,75 @@
+---
+title: Membres
+api: GET https://roapix.up.railway.app/api/v1/members
+description: Liste les membres du workspace avec leurs IDs — utile pour créer des entrées KPI.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<Tip>
+  Utilisez les `id` retournés ici comme `employee_user_id` pour `POST /api/v1/daily-kpi`.
+</Tip>
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  <Expandable title="Propriétés de chaque membre">
+    <ResponseField name="id" type="string">UUID du membre (à utiliser comme `employee_user_id`)</ResponseField>
+    <ResponseField name="name" type="string">Nom complet</ResponseField>
+    <ResponseField name="email" type="string">Adresse email</ResponseField>
+    <ResponseField name="role" type="string">Rôle workspace : `owner` ou `member`</ResponseField>
+    <ResponseField name="daily_kpi_role" type="string | null">Rôle KPI assigné</ResponseField>
+    <ResponseField name="last_login_at" type="string | null">Dernière connexion (ISO 8601)</ResponseField>
+    <ResponseField name="member_since" type="string">Date d'ajout au workspace</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/members \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Récupérer l'ID d'un membre par nom
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/members",
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+members = {m["name"]: m["id"] for m in r.json()["data"]}
+aymeric_id = members["Aymeric"]
+print(f"ID Aymeric: {aymeric_id}")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "id": "uuid-aymeric-...",
+      "name": "Aymeric",
+      "email": "aymeric@veluna.com",
+      "role": "member",
+      "daily_kpi_role": "ADS_LAUNCHER",
+      "last_login_at": "2026-03-23T09:00:00.000Z",
+      "member_since": "2026-02-01T00:00:00.000Z"
+    },
+    {
+      "id": "uuid-matthieu-...",
+      "name": "Matthieu",
+      "email": "matthieu@veluna.com",
+      "role": "owner",
+      "daily_kpi_role": null,
+      "last_login_at": "2026-03-23T20:00:00.000Z",
+      "member_since": "2026-01-01T00:00:00.000Z"
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

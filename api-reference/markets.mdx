@@ -1,0 +1,42 @@
+---
+title: Marchés
+api: GET https://roapix.up.railway.app/api/v1/markets
+description: Liste les marchés (codes pays) détectés dans vos campagnes Meta.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array[string]">
+  Liste des codes pays uniques, triés alphabétiquement.
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/markets \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/markets",
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+print(r.json()["data"])  # ["BE", "DE", "FR", "NL", ...]
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": ["BE", "DE", "FR", "NL", "UK"],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>
