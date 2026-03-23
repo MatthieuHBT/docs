@@ -3,32 +3,67 @@ title: Changelog
 description: Historique des versions et nouveautés de l'API Roapix.
 ---
 
-## v1.1 — Mars 2026
+## v1.3 — Mars 2026
 
 ### Nouveaux endpoints
-- `GET /api/v1/summary` — Résumé global (spend + revenue + ROAS + top pub) en un seul appel
-- `GET /api/v1/accounts` — Liste des comptes Meta connectés
-- `GET /api/v1/products` — Liste des produits détectés
-- `POST /api/v1/daily-kpi` — Écriture d'entrées KPI depuis l'extérieur
-- `PATCH /api/v1/daily-kpi/:id` — Modification d'une entrée KPI
-- `DELETE /api/v1/daily-kpi/:id` — Suppression d'une entrée KPI
-- `PATCH /api/v1/budgets/:campaignId` — Modification du budget d'une campagne
-- `DELETE /api/v1/budgets/:campaignId` — Suppression d'une campagne
-- `GET/POST/PATCH/DELETE /api/v1/webhooks` — Système de webhooks complet
+- `GET /api/v1/campaigns` — Liste brute des campagnes avec filtres (produit, marché, compte) + ROAS et CTR calculés
+- `GET /api/v1/daily-kpi/summary` — Agrégation des KPI par rôle, produit, employé ou marché
+- `POST /api/v1/sync` — Déclenchement manuel d'un sync Meta (réponse 202, exécution en background)
+- `GET /api/v1/api-keys` — Liste les clés API du workspace (métadonnées uniquement, sans secret)
+- `POST /api/v1/api-keys` — Génère une nouvelle clé API (secret retourné une seule fois)
+- `DELETE /api/v1/api-keys/{id}` — Révocation d'une clé (soft delete, impossible de révoquer la clé courante)
 
-### Webhooks
-Roapix peut maintenant notifier vos systèmes externes après chaque sync Meta (`sync.complete`), alerte déclenchée (`alert.fired`) ou dépassement de budget (`budget.exceeded`). Chaque requête est signée avec HMAC-SHA256.
+### CRUD complet ajouté
+- **Alertes** : `POST`, `PATCH /{id}`, `DELETE /{id}`
+- **Taux de change** : `PATCH /{currency}` — mise à jour ou création d'un taux custom
+- **Fusions Produits** : `POST`, `DELETE /{alias}`
+- **Membres** : `PATCH /{id}`, `DELETE /{id}` (protection owner)
+
+### Corrections
+- `GET /revenue` : supporte maintenant `date_preset` (cohérence avec les autres endpoints)
+- `GET /revenue` sans dates : ne retourne plus 500 (passage de `null` au lieu de `""` à la DB)
+- `PATCH /daily-kpi/{id}` : `count: 0` est maintenant accepté
+- Playground Mintlify : paramètres de chemin en `{id}` (OpenAPI) au lieu de `:id` (Express)
+
+---
+
+## v1.2 — Mars 2026
+
+### Nouveaux endpoints
+- `GET /api/v1/markets` — Codes pays détectés dans vos campagnes
+- `GET /api/v1/members` — Membres du workspace avec rôles
+- `GET /api/v1/sync-history` — Historique des syncs (statut, date, campagnes)
+- `GET /api/v1/exchange-rates` — Taux de change actuels (base USD)
+- `GET /api/v1/alerts` — Règles d'alertes configurées
+- `GET /api/v1/product-merges` — Fusions de produits (alias → canonical)
+
+### CRUD
+- **Budgets** : `PATCH /{campaignId}`, `DELETE /{campaignId}`
+- **KPI Journaliers** : `POST`, `PATCH /{id}`, `DELETE /{id}`
+- **Webhooks** : `GET list`, `POST`, `PATCH /{id}`, `DELETE /{id}`
+
+### Webhooks système
+Roapix notifie vos URLs après `sync.complete`, `alert.fired`, `budget.exceeded`. Chaque requête est signée HMAC-SHA256 avec l'ID du webhook.
+
+---
+
+## v1.1 — Février 2026
+
+### Nouveaux endpoints
+- `GET /api/v1/summary` — Résumé global (spend + revenue + ROAS + top pub)
+- `GET /api/v1/accounts` — Comptes Meta connectés
+- `GET /api/v1/products` — Produits détectés dans les campagnes
 
 ---
 
 ## v1.0 — Février 2026
 
 ### Lancement de l'API publique
-- Authentification par clé API (`roapix_xxx`)
+- Authentification par clé API (`Bearer roapix_xxx` ou `X-Api-Key`)
 - Rate limiting : 60 req/min par clé
 - `GET /api/v1/me` — Informations workspace
-- `GET /api/v1/spend` — Dépenses Meta agrégées par compte, marché et produit
+- `GET /api/v1/spend` — Dépenses Meta agrégées
 - `GET /api/v1/revenue` — Revenus Shopify
 - `GET /api/v1/winners` — Meilleures publicités avec ROAS et CTR
-- `GET /api/v1/budgets` — Budgets campagnes
-- `GET /api/v1/daily-kpi` — KPI journaliers
+- `GET /api/v1/budgets` — Budgets journaliers des campagnes
+- `GET /api/v1/daily-kpi` — KPI journaliers équipe

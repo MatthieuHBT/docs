@@ -1,13 +1,36 @@
 ---
-title: Webhooks
+title: Webhooks — Vue d'ensemble
 description: Recevez des notifications en temps réel après chaque sync ou alerte.
 ---
 
-Les webhooks permettent à Roapix d'appeler votre URL externe automatiquement après un événement — sync Meta terminé, alerte déclenchée, etc.
+Les webhooks permettent à Roapix d'appeler votre URL externe automatiquement après un événement.
+
+## Événements disponibles
+
+| Événement | Déclencheur |
+|-----------|-------------|
+| `sync.complete` | Fin d'un sync Meta Ads |
+| `alert.fired` | Alerte ROAS ou budget déclenchée |
+| `budget.exceeded` | Budget journalier dépassé |
+
+## Format du payload
+
+```json
+{
+  "event": "sync.complete",
+  "workspace_id": "a1b2c3d4-...",
+  "triggered_at": "2026-03-23T14:00:00.000Z",
+  "data": {
+    "campaigns_count": 42,
+    "date_since": "2026-03-22",
+    "date_until": "2026-03-23"
+  }
+}
+```
 
 ## Vérifier la signature
 
-Chaque requête inclut `X-Roapix-Signature` — HMAC-SHA256 du body signé avec l'ID du webhook :
+Chaque requête inclut un header `X-Roapix-Signature` — HMAC-SHA256 du body signé avec l'ID du webhook.
 
 ```python
 import hmac, hashlib
@@ -16,3 +39,22 @@ def verify(body: bytes, signature: str, webhook_id: str) -> bool:
     expected = hmac.new(webhook_id.encode(), body, hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected, signature)
 ```
+
+```javascript
+const crypto = require('crypto')
+
+function verify(body, signature, webhookId) {
+  const expected = crypto
+    .createHmac('sha256', webhookId)
+    .update(body)
+    .digest('hex')
+  return crypto.timingSafeEqual(
+    Buffer.from(expected),
+    Buffer.from(signature)
+  )
+}
+```
+
+<Info>
+  Roapix attend une réponse HTTP 2xx dans les 10 secondes. En cas d'échec, aucun retry n'est effectué actuellement.
+</Info>
