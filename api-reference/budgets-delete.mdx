@@ -1,0 +1,34 @@
+---
+title: Supprimer un budget
+api: DELETE https://roapix.up.railway.app/api/v1/budgets/:campaignId
+description: Supprime une campagne de la base Roapix (recréée au prochain sync Meta).
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="campaignId" type="string" required>
+  ID Meta de la campagne à supprimer
+</ParamField>
+
+<Warning>
+  La campagne sera recréée automatiquement au prochain sync Meta.
+</Warning>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE "https://roapix.up.railway.app/api/v1/budgets/120213456789" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": { "deleted": true, "campaign_id": "120213456789" },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

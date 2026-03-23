@@ -1,0 +1,64 @@
+---
+title: Créer un webhook
+api: POST https://roapix.up.railway.app/api/v1/webhooks
+description: Enregistre une URL externe pour recevoir des événements Roapix.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField body="url" type="string" required>
+  URL HTTPS vers laquelle Roapix enverra les événements
+</ParamField>
+
+<ParamField body="events" type="array">
+  Événements à écouter. Par défaut : tous.
+  Valeurs : `sync.complete`, `alert.fired`, `budget.exceeded`
+</ParamField>
+
+## Événements disponibles
+
+| Événement | Déclenché quand |
+|-----------|----------------|
+| `sync.complete` | Un sync Meta se termine avec succès |
+| `alert.fired` | Une alerte (ROAS, budget) se déclenche |
+| `budget.exceeded` | Un budget journalier est dépassé |
+
+## Format du payload reçu
+
+```json
+{
+  "event": "sync.complete",
+  "workspace_id": "a1b2c3d4-...",
+  "fired_at": "2026-03-23T14:00:00.000Z",
+  "data": { "campaigns_count": 142 }
+}
+```
+
+Chaque requête inclut un header `X-Roapix-Signature` (HMAC-SHA256).
+
+<RequestExample>
+```bash cURL
+curl -X POST https://roapix.up.railway.app/api/v1/webhooks \
+  -H "Authorization: Bearer roapix_votre_clé" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://hook.make.com/abc123", "events": ["sync.complete"]}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 201
+{
+  "data": {
+    "id": "wh-uuid-...",
+    "url": "https://hook.make.com/abc123",
+    "events": ["sync.complete"],
+    "is_active": true,
+    "created_at": "2026-03-23T14:00:00.000Z"
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

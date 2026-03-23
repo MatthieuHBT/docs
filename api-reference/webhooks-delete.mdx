@@ -1,0 +1,28 @@
+---
+title: Supprimer un webhook
+api: DELETE https://roapix.up.railway.app/api/v1/webhooks/:id
+description: Supprime définitivement un webhook.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="id" type="string" required>UUID du webhook à supprimer</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE "https://roapix.up.railway.app/api/v1/webhooks/wh-uuid-..." \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": { "deleted": true, "id": "wh-uuid-..." },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

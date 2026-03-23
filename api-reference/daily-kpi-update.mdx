@@ -1,0 +1,43 @@
+---
+title: Modifier une entrée KPI
+api: PATCH https://roapix.up.railway.app/api/v1/daily-kpi/:id
+description: Modifie le compteur d'une entrée KPI existante.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="id" type="string" required>
+  UUID de l'entrée KPI
+</ParamField>
+
+<ParamField body="count" type="number" required>
+  Nouvelle valeur du compteur (> 0)
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X PATCH "https://roapix.up.railway.app/api/v1/daily-kpi/uuid-..." \
+  -H "Authorization: Bearer roapix_votre_clé" \
+  -H "Content-Type: application/json" \
+  -d '{"count": 8}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "id": "uuid-...",
+    "entry_date": "2026-03-23",
+    "role": "ADS_LAUNCHER",
+    "product_name": "Felipet Cat",
+    "count": 8,
+    "updated_at": "2026-03-23T20:00:00.000Z"
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

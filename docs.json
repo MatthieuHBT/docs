@@ -14,12 +14,7 @@
     "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Dashboard",
-        "href": "https://roapix.up.railway.app"
-      }
-    ],
+    "links": [{ "label": "Dashboard", "href": "https://roapix.up.railway.app" }],
     "primary": {
       "type": "button",
       "label": "Get API Key",
@@ -33,19 +28,11 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "introduction",
-              "authentication",
-              "errors"
-            ]
+            "pages": ["introduction", "authentication", "errors"]
           },
           {
             "group": "Guides",
-            "pages": [
-              "guides/zapier-make",
-              "guides/ai-agents",
-              "guides/python"
-            ]
+            "pages": ["guides/zapier-make", "guides/ai-agents", "guides/python"]
           }
         ]
       },
@@ -54,38 +41,46 @@
         "groups": [
           {
             "group": "Workspace",
-            "pages": [
-              "api-reference/me",
-              "api-reference/summary"
-            ]
+            "pages": ["api-reference/me", "api-reference/summary"]
           },
           {
             "group": "Advertising",
             "pages": [
               "api-reference/spend",
-              "api-reference/budgets",
-              "api-reference/winners",
               "api-reference/accounts",
-              "api-reference/products"
+              "api-reference/products",
+              "api-reference/winners"
+            ]
+          },
+          {
+            "group": "Budgets",
+            "pages": [
+              "api-reference/budgets",
+              "api-reference/budgets-update",
+              "api-reference/budgets-delete"
             ]
           },
           {
             "group": "Revenue",
-            "pages": [
-              "api-reference/revenue"
-            ]
+            "pages": ["api-reference/revenue"]
           },
           {
-            "group": "Operations",
+            "group": "KPI Journaliers",
             "pages": [
               "api-reference/daily-kpi",
-              "api-reference/daily-kpi-write"
+              "api-reference/daily-kpi-create",
+              "api-reference/daily-kpi-update",
+              "api-reference/daily-kpi-delete"
             ]
           },
           {
             "group": "Webhooks",
             "pages": [
-              "api-reference/webhooks"
+              "api-reference/webhooks",
+              "api-reference/webhooks-list",
+              "api-reference/webhooks-create",
+              "api-reference/webhooks-update",
+              "api-reference/webhooks-delete"
             ]
           }
         ]
@@ -101,7 +96,5 @@
       ]
     }
   },
-  "footer": {
-    "socials": {}
-  }
+  "footer": { "socials": {} }
 }
