@@ -1,0 +1,30 @@
+---
+title: Supprimer une fusion
+api: DELETE https://roapix.up.railway.app/api/v1/product-merges/:alias
+description: Supprime l'association entre un alias et son nom canonique.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="alias" type="string" required>
+  Alias à supprimer (ex : `FC`)
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE "https://roapix.up.railway.app/api/v1/product-merges/FC" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": { "deleted": true, "alias": "FC" },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

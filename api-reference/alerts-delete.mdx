@@ -1,0 +1,28 @@
+---
+title: Supprimer une alerte
+api: DELETE https://roapix.up.railway.app/api/v1/alerts/:id
+description: Supprime définitivement une règle d'alerte.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="id" type="string" required>UUID de la règle à supprimer</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE "https://roapix.up.railway.app/api/v1/alerts/alert-uuid-..." \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": { "deleted": true, "id": "alert-uuid-..." },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

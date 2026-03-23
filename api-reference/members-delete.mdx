@@ -1,0 +1,32 @@
+---
+title: Retirer un membre
+api: DELETE https://roapix.up.railway.app/api/v1/members/:id
+description: Retire un membre du workspace. Impossible sur le propriétaire (owner).
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="id" type="string" required>UUID du membre à retirer</ParamField>
+
+<Warning>
+  Le propriétaire du workspace (`owner`) ne peut pas être retiré via l'API.
+</Warning>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE "https://roapix.up.railway.app/api/v1/members/uuid-aymeric-..." \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": { "deleted": true, "id": "uuid-aymeric-..." },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

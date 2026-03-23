@@ -1,0 +1,40 @@
+---
+title: Mettre à jour un taux
+api: PATCH https://roapix.up.railway.app/api/v1/exchange-rates/:currency
+description: Met à jour ou crée le taux de change d'une devise vers USD.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="currency" type="string" required>
+  Code devise ISO 4217 (ex : `EUR`, `GBP`, `CHF`)
+</ParamField>
+
+<ParamField body="rate_to_usd" type="number" required>
+  Taux de conversion 1 unité de cette devise → USD
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X PATCH "https://roapix.up.railway.app/api/v1/exchange-rates/EUR" \
+  -H "Authorization: Bearer roapix_votre_clé" \
+  -H "Content-Type: application/json" \
+  -d '{"rate_to_usd": 1.092}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "currency": "EUR",
+    "rate_to_usd": 1.092,
+    "fetched_at": "2026-03-23T20:00:00.000Z"
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

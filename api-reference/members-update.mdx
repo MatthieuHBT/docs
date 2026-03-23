@@ -1,0 +1,42 @@
+---
+title: Modifier un membre
+api: PATCH https://roapix.up.railway.app/api/v1/members/:id
+description: Met à jour le rôle ou le rôle KPI d'un membre du workspace.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="id" type="string" required>UUID du membre</ParamField>
+
+<ParamField body="role" type="string">
+  Rôle workspace : `owner` ou `member`
+</ParamField>
+
+<ParamField body="daily_kpi_role" type="string">
+  Rôle KPI : `ADS_LAUNCHER`, `TRANSLATOR`, `COPY_PASTER`, `AD_CREATOR`, ou `null` pour retirer
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X PATCH "https://roapix.up.railway.app/api/v1/members/uuid-aymeric-..." \
+  -H "Authorization: Bearer roapix_votre_clé" \
+  -H "Content-Type: application/json" \
+  -d '{"daily_kpi_role": "ADS_LAUNCHER"}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "id": "uuid-aymeric-...",
+    "role": "member",
+    "daily_kpi_role": "ADS_LAUNCHER"
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>
