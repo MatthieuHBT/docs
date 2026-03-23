@@ -1,0 +1,38 @@
+---
+title: FAQ
+description: Questions fréquentes sur l'API Roapix.
+---
+
+<AccordionGroup>
+  <Accordion title="Combien de clés API puis-je créer ?">
+    Autant que nécessaire. Créez une clé par application ou intégration — cela vous permettra de révoquer l'accès d'un seul outil sans impacter les autres.
+  </Accordion>
+
+  <Accordion title="Les données sont-elles en temps réel ?">
+    Non. L'API retourne les données telles qu'elles existent en base au moment de la requête. Les données Meta sont mises à jour lors des syncs (manuels ou planifiés). Utilisez les webhooks pour être notifié après chaque sync.
+  </Accordion>
+
+  <Accordion title="Quelle est la limite de requêtes ?">
+    60 requêtes par minute par clé API. Si vous avez besoin d'une limite plus élevée, contactez-nous.
+  </Accordion>
+
+  <Accordion title="Puis-je accéder aux données de plusieurs workspaces ?">
+    Chaque clé API est liée à un seul workspace. Pour accéder à plusieurs workspaces, créez une clé API par workspace.
+  </Accordion>
+
+  <Accordion title="Les montants sont dans quelle devise ?">
+    Tout est en USD. Les conversions depuis EUR, GBP, etc. sont appliquées automatiquement selon les taux configurés dans votre workspace.
+  </Accordion>
+
+  <Accordion title="Comment vérifier la signature d'un webhook ?">
+    Chaque requête webhook contient un header `X-Roapix-Signature` (HMAC-SHA256 du body signé avec l'ID du webhook). Voir la [page Webhooks](/api-reference/webhooks) pour un exemple de vérification.
+  </Accordion>
+
+  <Accordion title="L'API peut-elle déclencher un sync Meta ?">
+    Non, l'API est en lecture/écriture sur les données existantes uniquement. Le sync Meta se déclenche depuis le dashboard ou via les boutons Sync dans l'interface.
+  </Accordion>
+
+  <Accordion title="Comment utiliser l'API avec Make ou Zapier ?">
+    Utilisez un module HTTP Request avec `Authorization: Bearer roapix_xxx` dans les headers. Consultez le [guide Zapier & Make](/guides/zapier-make) pour des exemples complets.
+  </Accordion>
+</AccordionGroup>

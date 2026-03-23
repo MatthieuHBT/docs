@@ -1,0 +1,52 @@
+---
+title: Concepts clés
+description: Workspaces, clés API, date presets — les bases de l'API Roapix.
+---
+
+## Workspaces
+
+Toutes vos données sont isolées par **workspace**. Chaque clé API est liée à un workspace spécifique — vous ne pouvez pas accéder aux données d'un autre workspace avec la même clé.
+
+Le `workspace_id` est retourné dans toutes les réponses.
+
+## Clés API
+
+- Format : `roapix_` suivi de 40 caractères hexadécimaux
+- Stockées sous forme de hash SHA-256 (jamais en clair)
+- Révocables immédiatement depuis **Paramètres → API Keys**
+- Une clé par application/intégration (facilite la révocation)
+
+## Date presets
+
+La plupart des endpoints acceptent un paramètre `date_preset` pour simplifier les requêtes :
+
+| Valeur | Période |
+|--------|---------|
+| `today` | Aujourd'hui (minuit → maintenant) |
+| `yesterday` | Hier complet |
+| `last_7d` | J-6 → aujourd'hui |
+| `last_30d` | J-29 → aujourd'hui |
+
+Si vous fournissez `since` et `until`, le `date_preset` est ignoré.
+
+## Devises
+
+Toutes les valeurs monétaires sont en **USD**. Les conversions depuis EUR/GBP/etc. sont appliquées automatiquement via les taux de change configurés dans votre workspace.
+
+## Synchronisation
+
+Les données Meta sont synchronisées via le bouton **Sync** dans le dashboard. L'API retourne les données telles qu'elles existent en base au moment de la requête — elle ne déclenche pas de sync Meta.
+
+Pour être notifié après chaque sync, utilisez les [webhooks](/api-reference/webhooks).
+
+## Rate limiting
+
+**60 requêtes par minute** par clé API. Les headers de réponse indiquent votre consommation :
+
+| Header | Description |
+|--------|-------------|
+| `RateLimit-Limit` | Limite par fenêtre (60) |
+| `RateLimit-Remaining` | Requêtes restantes |
+| `RateLimit-Reset` | Timestamp de reset |
+
+En cas de dépassement : `429 Too Many Requests`.

@@ -1,0 +1,34 @@
+---
+title: Changelog
+description: Historique des versions et nouveautés de l'API Roapix.
+---
+
+## v1.1 — Mars 2026
+
+### Nouveaux endpoints
+- `GET /api/v1/summary` — Résumé global (spend + revenue + ROAS + top pub) en un seul appel
+- `GET /api/v1/accounts` — Liste des comptes Meta connectés
+- `GET /api/v1/products` — Liste des produits détectés
+- `POST /api/v1/daily-kpi` — Écriture d'entrées KPI depuis l'extérieur
+- `PATCH /api/v1/daily-kpi/:id` — Modification d'une entrée KPI
+- `DELETE /api/v1/daily-kpi/:id` — Suppression d'une entrée KPI
+- `PATCH /api/v1/budgets/:campaignId` — Modification du budget d'une campagne
+- `DELETE /api/v1/budgets/:campaignId` — Suppression d'une campagne
+- `GET/POST/PATCH/DELETE /api/v1/webhooks` — Système de webhooks complet
+
+### Webhooks
+Roapix peut maintenant notifier vos systèmes externes après chaque sync Meta (`sync.complete`), alerte déclenchée (`alert.fired`) ou dépassement de budget (`budget.exceeded`). Chaque requête est signée avec HMAC-SHA256.
+
+---
+
+## v1.0 — Février 2026
+
+### Lancement de l'API publique
+- Authentification par clé API (`roapix_xxx`)
+- Rate limiting : 60 req/min par clé
+- `GET /api/v1/me` — Informations workspace
+- `GET /api/v1/spend` — Dépenses Meta agrégées par compte, marché et produit
+- `GET /api/v1/revenue` — Revenus Shopify
+- `GET /api/v1/winners` — Meilleures publicités avec ROAS et CTR
+- `GET /api/v1/budgets` — Budgets campagnes
+- `GET /api/v1/daily-kpi` — KPI journaliers

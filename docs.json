@@ -27,12 +27,20 @@
         "tab": "Getting Started",
         "groups": [
           {
-            "group": "Introduction",
-            "pages": ["introduction", "authentication", "errors"]
+            "group": "Bienvenue",
+            "pages": ["introduction", "quickstart", "concepts"]
+          },
+          {
+            "group": "Référence",
+            "pages": ["authentication", "errors", "faq"]
           },
           {
             "group": "Guides",
             "pages": ["guides/zapier-make", "guides/ai-agents", "guides/python"]
+          },
+          {
+            "group": "Ressources",
+            "pages": ["changelog"]
           }
         ]
       },
