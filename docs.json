@@ -52,10 +52,15 @@
             "pages": [
               "api-reference/me",
               "api-reference/summary",
-              "api-reference/members",
-              "api-reference/members-update",
-              "api-reference/members-delete",
-              "api-reference/sync-history"
+              "api-reference/sync-history",
+              {
+                "group": "Membres",
+                "pages": [
+                  "api-reference/members",
+                  "api-reference/members-update",
+                  "api-reference/members-delete"
+                ]
+              }
             ]
           },
           {
@@ -102,15 +107,30 @@
           {
             "group": "Configuration",
             "pages": [
-              "api-reference/alerts",
-              "api-reference/alerts-create",
-              "api-reference/alerts-update",
-              "api-reference/alerts-delete",
-              "api-reference/exchange-rates",
-              "api-reference/exchange-rates-update",
-              "api-reference/product-merges",
-              "api-reference/product-merges-create",
-              "api-reference/product-merges-delete"
+              {
+                "group": "Alertes",
+                "pages": [
+                  "api-reference/alerts",
+                  "api-reference/alerts-create",
+                  "api-reference/alerts-update",
+                  "api-reference/alerts-delete"
+                ]
+              },
+              {
+                "group": "Taux de Change",
+                "pages": [
+                  "api-reference/exchange-rates",
+                  "api-reference/exchange-rates-update"
+                ]
+              },
+              {
+                "group": "Fusions Produits",
+                "pages": [
+                  "api-reference/product-merges",
+                  "api-reference/product-merges-create",
+                  "api-reference/product-merges-delete"
+                ]
+              }
             ]
           }
         ]
