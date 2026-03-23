@@ -3,9 +3,9 @@
   "theme": "venus",
   "name": "Roapix",
   "colors": {
-    "primary": "#6366f1",
-    "light": "#a5b4fc",
-    "dark": "#4f46e5"
+    "primary": "#ccfc7e",
+    "light": "#d9fe9e",
+    "dark": "#a3e635"
   },
   "favicon": "/favicon.svg",
   "logo": {
