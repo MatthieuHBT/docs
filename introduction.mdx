@@ -1,24 +1,30 @@
 ---
-title: Bienvenue sur l'API Roapix
-description: Accédez à vos données Meta Ads et Shopify depuis n'importe quel outil.
+title: Bienvenue sur Roapix
+description: L'API qui connecte vos données Meta Ads et Shopify à vos outils, scripts et agents IA.
 ---
 
-L'API Roapix vous donne un accès programmatique complet à vos données de performance — dépenses Meta, revenus Shopify, ROAS, budgets, KPI équipe — depuis vos propres scripts, dashboards ou agents IA.
+<img
+  className="block"
+  src="/logo/dark.svg"
+  alt="Roapix"
+  style={{ height: '48px', marginBottom: '24px' }}
+/>
 
-<CardGroup cols={2}>
+Roapix agrège vos campagnes Meta, vos revenus Shopify et vos KPI équipe en une seule API REST — disponible depuis n'importe quel script, dashboard ou agent IA.
+
+<CardGroup cols={3}>
   <Card title="Démarrage rapide" icon="rocket" href="/quickstart">
-    Votre premier appel API en moins de 2 minutes.
+    Premier appel API en 2 minutes
   </Card>
   <Card title="Authentification" icon="key" href="/authentication">
-    Générez votre clé API et sécurisez vos requêtes.
+    Générez votre clé API
   </Card>
   <Card title="Résumé global" icon="chart-line" href="/api-reference/summary">
-    Spend + Revenue + ROAS en un seul appel.
-  </Card>
-  <Card title="Agents IA" icon="robot" href="/guides/ai-agents">
-    Connectez Claude ou ChatGPT à vos données en temps réel.
+    Spend + Revenue + ROAS en un appel
   </Card>
 </CardGroup>
+
+---
 
 ## Base URL
 
@@ -26,24 +32,87 @@ L'API Roapix vous donne un accès programmatique complet à vos données de perf
 https://roapix.up.railway.app/api/v1
 ```
 
-## Format des réponses
+Toutes les requêtes nécessitent un header `Authorization: Bearer roapix_xxx`.
 
-Toutes les réponses suivent la même enveloppe JSON :
+---
+
+## Réponse standard
 
 ```json
 {
   "data": { ... },
-  "workspace_id": "uuid-de-votre-workspace",
+  "workspace_id": "a1b2c3d4-...",
   "generated_at": "2026-03-23T14:00:00.000Z"
 }
 ```
 
-## Ce que vous pouvez faire
+---
 
-| Catégorie | Endpoints |
-|-----------|-----------|
-| Workspace | Infos, résumé global |
-| Publicité | Dépenses, budgets, meilleures pubs, comptes, produits |
-| Revenus | Commandes et CA Shopify |
-| KPI équipe | Lecture et écriture des entrées journalières |
-| Webhooks | Notifications push après chaque sync |
+## Ce que couvre l'API
+
+<CardGroup cols={2}>
+  <Card title="Workspace" icon="building">
+    Infos workspace, membres, historique de sync, déclenchement manuel
+  </Card>
+  <Card title="API Keys" icon="key">
+    Créer, lister et révoquer des clés API programmatiquement
+  </Card>
+  <Card title="Advertising" icon="bullhorn">
+    Campagnes, dépenses, budgets, meilleures pubs, comptes, produits, marchés
+  </Card>
+  <Card title="Revenue" icon="cart-shopping">
+    Commandes et chiffre d'affaires Shopify par période
+  </Card>
+  <Card title="KPI Journaliers" icon="chart-bar">
+    Lectures et écritures des entrées KPI équipe, résumés agrégés
+  </Card>
+  <Card title="Webhooks" icon="bell">
+    Notifications push après chaque sync ou alerte déclenchée
+  </Card>
+  <Card title="Alertes" icon="triangle-exclamation">
+    Règles d'alertes ROAS / budget avec envoi Slack ou email
+  </Card>
+  <Card title="Configuration" icon="gear">
+    Taux de change, fusions de produits
+  </Card>
+</CardGroup>
+
+---
+
+## Exemple rapide
+
+```bash
+curl "https://roapix.up.railway.app/api/v1/summary?date_preset=last_7d" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```json
+{
+  "data": {
+    "since": "2026-03-17",
+    "until": "2026-03-23",
+    "spend": 12450.00,
+    "revenue": 38200.00,
+    "roas": 3.07,
+    "orders": 312,
+    "top_ad": { "name": "Felipet Cat — FR — V3", "spend": 1820.00 }
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+
+---
+
+## Limites
+
+| Limite | Valeur |
+|--------|--------|
+| Requêtes par minute | 60 par clé API |
+| Pagination campaigns | max 2 000 |
+| Pagination winners | max 1 000 |
+| Historique sync | max 100 entrées |
+
+<Info>
+  Toutes les dépenses et revenus sont exprimés en **USD**. Les taux de change sont mis à jour automatiquement depuis [open.er-api.com](https://open.er-api.com).
+</Info>
