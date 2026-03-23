@@ -1,30 +1,22 @@
 ---
-title: Bienvenue sur Roapix
+title: Introduction
+sidebarTitle: Introduction
 description: L'API qui connecte vos données Meta Ads et Shopify à vos outils, scripts et agents IA.
 ---
 
-<img
-  className="block"
-  src="/logo/dark.svg"
-  alt="Roapix"
-  style={{ height: '48px', marginBottom: '24px' }}
-/>
-
-Roapix agrège vos campagnes Meta, vos revenus Shopify et vos KPI équipe en une seule API REST — disponible depuis n'importe quel script, dashboard ou agent IA.
+Roapix agrège vos campagnes Meta, vos revenus Shopify et vos KPI équipe en une API REST unique — disponible depuis n'importe quel script, dashboard ou agent IA.
 
 <CardGroup cols={3}>
   <Card title="Démarrage rapide" icon="rocket" href="/quickstart">
-    Premier appel API en 2 minutes
+    Votre premier appel API en 2 minutes
   </Card>
   <Card title="Authentification" icon="key" href="/authentication">
-    Générez votre clé API
+    Générez votre clé API depuis les Settings
   </Card>
-  <Card title="Résumé global" icon="chart-line" href="/api-reference/summary">
-    Spend + Revenue + ROAS en un appel
+  <Card title="Agents IA" icon="robot" href="/guides/ai-agents">
+    Connectez Claude ou ChatGPT à vos données
   </Card>
 </CardGroup>
-
----
 
 ## Base URL
 
@@ -32,9 +24,7 @@ Roapix agrège vos campagnes Meta, vos revenus Shopify et vos KPI équipe en une
 https://roapix.up.railway.app/api/v1
 ```
 
-Toutes les requêtes nécessitent un header `Authorization: Bearer roapix_xxx`.
-
----
+Chaque requête doit inclure le header `Authorization: Bearer roapix_xxx`.
 
 ## Réponse standard
 
@@ -46,40 +36,36 @@ Toutes les requêtes nécessitent un header `Authorization: Bearer roapix_xxx`.
 }
 ```
 
----
-
-## Ce que couvre l'API
+## Couverture API
 
 <CardGroup cols={2}>
-  <Card title="Workspace" icon="building">
-    Infos workspace, membres, historique de sync, déclenchement manuel
+  <Card title="Workspace" icon="building" href="/api-reference/me">
+    Infos workspace, membres, sync history, déclenchement manuel
   </Card>
-  <Card title="API Keys" icon="key">
-    Créer, lister et révoquer des clés API programmatiquement
+  <Card title="API Keys" icon="key" href="/api-reference/api-keys-list">
+    Créer, lister et révoquer des clés programmatiquement
   </Card>
-  <Card title="Advertising" icon="bullhorn">
-    Campagnes, dépenses, budgets, meilleures pubs, comptes, produits, marchés
+  <Card title="Advertising" icon="bullhorn" href="/api-reference/spend">
+    Campagnes, dépenses, budgets, meilleures pubs, marchés
   </Card>
-  <Card title="Revenue" icon="cart-shopping">
-    Commandes et chiffre d'affaires Shopify par période
+  <Card title="Revenue" icon="cart-shopping" href="/api-reference/revenue">
+    Commandes et CA Shopify par période
   </Card>
-  <Card title="KPI Journaliers" icon="chart-bar">
-    Lectures et écritures des entrées KPI équipe, résumés agrégés
+  <Card title="KPI Journaliers" icon="chart-bar" href="/api-reference/daily-kpi">
+    Entrées KPI équipe, résumés agrégés par rôle ou produit
   </Card>
-  <Card title="Webhooks" icon="bell">
-    Notifications push après chaque sync ou alerte déclenchée
+  <Card title="Webhooks" icon="bell" href="/api-reference/webhooks">
+    Notifications push après chaque sync ou alerte
   </Card>
-  <Card title="Alertes" icon="triangle-exclamation">
-    Règles d'alertes ROAS / budget avec envoi Slack ou email
+  <Card title="Alertes" icon="triangle-exclamation" href="/api-reference/alerts">
+    Règles d'alertes ROAS / budget, envoi Slack ou email
   </Card>
-  <Card title="Configuration" icon="gear">
+  <Card title="Configuration" icon="gear" href="/api-reference/exchange-rates">
     Taux de change, fusions de produits
   </Card>
 </CardGroup>
 
----
-
-## Exemple rapide
+## Exemple
 
 ```bash
 curl "https://roapix.up.railway.app/api/v1/summary?date_preset=last_7d" \
@@ -96,23 +82,15 @@ curl "https://roapix.up.railway.app/api/v1/summary?date_preset=last_7d" \
     "roas": 3.07,
     "orders": 312,
     "top_ad": { "name": "Felipet Cat — FR — V3", "spend": 1820.00 }
-  },
-  "workspace_id": "a1b2c3d4-...",
-  "generated_at": "2026-03-23T14:00:00.000Z"
+  }
 }
 ```
-
----
 
 ## Limites
 
 | Limite | Valeur |
 |--------|--------|
-| Requêtes par minute | 60 par clé API |
-| Pagination campaigns | max 2 000 |
-| Pagination winners | max 1 000 |
+| Requêtes / minute | 60 par clé API |
+| Résultats campaigns | max 2 000 |
+| Résultats winners | max 1 000 |
 | Historique sync | max 100 entrées |
-
-<Info>
-  Toutes les dépenses et revenus sont exprimés en **USD**. Les taux de change sont mis à jour automatiquement depuis [open.er-api.com](https://open.er-api.com).
-</Info>

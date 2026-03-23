@@ -14,7 +14,10 @@
     "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [{ "label": "Dashboard", "href": "https://roapix.up.railway.app" }],
+    "links": [
+      { "label": "Dashboard", "href": "https://roapix.up.railway.app" },
+      { "label": "Documentation API", "href": "https://roapix.mintlify.app/introduction" }
+    ],
     "primary": {
       "type": "button",
       "label": "Get API Key",
