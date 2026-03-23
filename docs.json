@@ -16,7 +16,7 @@
   "navbar": {
     "links": [
       { "label": "Dashboard", "href": "https://roapix.up.railway.app" },
-      { "label": "Documentation API", "href": "https://roapix.mintlify.app/introduction" }
+      { "label": "API Reference", "href": "/api-reference/me" }
     ],
     "primary": {
       "type": "button",
