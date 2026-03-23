@@ -1,0 +1,99 @@
+---
+title: Revenus Shopify
+api: GET https://roapix.up.railway.app/api/v1/revenue
+description: Récupère les revenus et commandes Shopify sur une période donnée.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField query="since" type="string">
+  Date de début au format `YYYY-MM-DD`. Ex : `2026-03-01`
+</ParamField>
+
+<ParamField query="until" type="string">
+  Date de fin au format `YYYY-MM-DD`. Ex : `2026-03-23`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriétés">
+    <ResponseField name="since" type="string | null">Date de début utilisée</ResponseField>
+    <ResponseField name="until" type="string | null">Date de fin utilisée</ResponseField>
+    <ResponseField name="summary" type="object">
+      Résumé agrégé sur la période.
+
+      | Champ | Type | Description |
+      |-------|------|-------------|
+      | `total_revenue` | number | Chiffre d'affaires total (USD) |
+      | `total_orders` | number | Nombre de commandes |
+      | `avg_order_value` | number | Valeur moyenne par commande |
+    </ResponseField>
+    <ResponseField name="rows" type="array">
+      Détail journalier / par produit. Chaque entrée contient les données brutes Shopify.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl "https://roapix.up.railway.app/api/v1/revenue?since=2026-03-01&until=2026-03-23" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/revenue",
+    params={"since": "2026-03-01", "until": "2026-03-23"},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+data = r.json()["data"]
+print(f"Revenue: ${data['summary']['total_revenue']:,.2f}")
+print(f"Orders: {data['summary']['total_orders']}")
+```
+
+```javascript JavaScript
+const res = await fetch(
+  'https://roapix.up.railway.app/api/v1/revenue?since=2026-03-01&until=2026-03-23',
+  { headers: { 'Authorization': 'Bearer roapix_votre_clé' } }
+)
+const { data } = await res.json()
+console.log(`Revenue: $${data.summary.total_revenue}`)
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "since": "2026-03-01",
+    "until": "2026-03-23",
+    "summary": {
+      "total_revenue": 24800.00,
+      "total_orders": 312,
+      "avg_order_value": 79.49
+    },
+    "rows": [
+      {
+        "date": "2026-03-23",
+        "revenue": 1240.00,
+        "orders": 16,
+        "product": "Felipet Cat"
+      },
+      {
+        "date": "2026-03-23",
+        "revenue": 890.00,
+        "orders": 11,
+        "product": "Felipet Dog"
+      }
+    ]
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

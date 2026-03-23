@@ -1,0 +1,57 @@
+---
+title: Erreurs
+description: Codes d'erreur et messages retournés par l'API.
+---
+
+## Format d'erreur
+
+Toutes les erreurs retournent un objet JSON avec une clé `error` :
+
+```json
+{
+  "error": "Description de l'erreur"
+}
+```
+
+## Codes HTTP
+
+| Code | Signification | Cause fréquente |
+|------|--------------|-----------------|
+| `200` | Succès | — |
+| `400` | Requête invalide | Paramètre manquant ou malformé |
+| `401` | Non autorisé | Clé API absente, invalide ou révoquée |
+| `403` | Interdit | Accès non autorisé à cette ressource |
+| `429` | Trop de requêtes | Rate limit dépassé (60 req/min) |
+| `500` | Erreur serveur | Contactez le support |
+| `503` | Service indisponible | Base de données non configurée |
+
+## Exemples
+
+<AccordionGroup>
+  <Accordion title="401 — Clé invalide">
+    ```json
+    {
+      "error": "Invalid or revoked API key"
+    }
+    ```
+    Vérifiez que la clé commence bien par `roapix_` et qu'elle n'a pas été révoquée.
+  </Accordion>
+
+  <Accordion title="401 — Clé absente">
+    ```json
+    {
+      "error": "API key required",
+      "hint": "Use Authorization: Bearer roapix_xxx or X-Api-Key: roapix_xxx"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="429 — Rate limit">
+    ```json
+    {
+      "error": "Rate limit exceeded: 60 requests/minute per API key"
+    }
+    ```
+    Attendez la prochaine fenêtre d'une minute ou contactez-nous pour augmenter la limite.
+  </Accordion>
+</AccordionGroup>

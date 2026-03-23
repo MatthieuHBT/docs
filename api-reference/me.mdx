@@ -1,0 +1,43 @@
+---
+title: Workspace Info
+api: GET https://roapix.up.railway.app/api/v1/me
+description: Retourne les informations du workspace associé à votre clé API.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriétés">
+    <ResponseField name="workspace_id" type="string">UUID du workspace</ResponseField>
+    <ResponseField name="workspace_name" type="string">Nom du workspace</ResponseField>
+    <ResponseField name="api_version" type="string">Version de l'API (ex: `v1`)</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="workspace_id" type="string">UUID du workspace</ResponseField>
+<ResponseField name="generated_at" type="string">Timestamp ISO 8601</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/me \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "workspace_id": "a1b2c3d4-...",
+    "workspace_name": "Veluna Pets",
+    "api_version": "v1"
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

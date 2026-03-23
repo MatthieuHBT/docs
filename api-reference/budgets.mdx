@@ -1,0 +1,83 @@
+---
+title: Budgets campagnes
+api: GET https://roapix.up.railway.app/api/v1/budgets
+description: Liste les budgets journaliers configurés pour chaque campagne Meta.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+Cet endpoint ne prend pas de paramètres de date — il retourne les budgets actuellement configurés.
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  Liste des campagnes avec leur budget journalier.
+  <Expandable title="Propriétés de chaque item">
+    <ResponseField name="campaign_id" type="string">Identifiant Meta de la campagne</ResponseField>
+    <ResponseField name="campaign_name" type="string">Nom de la campagne</ResponseField>
+    <ResponseField name="daily_budget" type="number">Budget journalier en USD</ResponseField>
+    <ResponseField name="account" type="string">Nom du compte publicitaire</ResponseField>
+    <ResponseField name="product" type="string">Produit associé</ResponseField>
+    <ResponseField name="market" type="string">Marché (code pays)</ResponseField>
+    <ResponseField name="status" type="string">Statut de la campagne (`ACTIVE`, `PAUSED`, etc.)</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/budgets \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/budgets",
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+budgets = r.json()["data"]
+total = sum(b["daily_budget"] for b in budgets if b["status"] == "ACTIVE")
+print(f"Total budget journalier actif : ${total:,.2f}")
+```
+
+```javascript JavaScript
+const res = await fetch('https://roapix.up.railway.app/api/v1/budgets', {
+  headers: { 'Authorization': 'Bearer roapix_votre_clé' }
+})
+const { data } = await res.json()
+const active = data.filter(b => b.status === 'ACTIVE')
+console.log(`${active.length} campagnes actives`)
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "campaign_id": "120213456789",
+      "campaign_name": "Felipet Cat — FR — Acquisition",
+      "daily_budget": 300.00,
+      "account": "FR Compte Principal",
+      "product": "Felipet Cat",
+      "market": "FR",
+      "status": "ACTIVE"
+    },
+    {
+      "campaign_id": "120298765432",
+      "campaign_name": "Felipet Dog — DE — Retargeting",
+      "daily_budget": 150.00,
+      "account": "DE Compte",
+      "product": "Felipet Dog",
+      "market": "DE",
+      "status": "PAUSED"
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

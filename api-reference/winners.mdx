@@ -1,0 +1,105 @@
+---
+title: Meilleures publicités
+api: GET https://roapix.up.railway.app/api/v1/winners
+description: Retourne les publicités Meta classées par dépense, avec ROAS et CTR calculés.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField query="date_preset" type="string">
+  Raccourci de période. Valeurs : `today`, `yesterday`, `last_7d`, `last_30d`.
+  Ignoré si `since` et `until` sont fournis.
+</ParamField>
+
+<ParamField query="since" type="string">
+  Date de début au format `YYYY-MM-DD`. Ex : `2026-03-01`
+</ParamField>
+
+<ParamField query="until" type="string">
+  Date de fin au format `YYYY-MM-DD`. Ex : `2026-03-23`
+</ParamField>
+
+<ParamField query="limit" type="number" default="100">
+  Nombre maximum de publicités retournées. Min : `1`, max : `1000`.
+</ParamField>
+
+## Réponse
+
+La réponse est un tableau d'objets, triés par dépense décroissante.
+
+<ResponseField name="data" type="array">
+  <Expandable title="Propriétés de chaque item">
+    <ResponseField name="rank" type="number">Classement (1 = plus grande dépense)</ResponseField>
+    <ResponseField name="ad_name" type="string">Nom de la publicité</ResponseField>
+    <ResponseField name="spend" type="number">Dépense totale (USD)</ResponseField>
+    <ResponseField name="impressions" type="number">Nombre d'impressions</ResponseField>
+    <ResponseField name="clicks" type="number">Nombre de clics</ResponseField>
+    <ResponseField name="purchases" type="number">Nombre d'achats attribués</ResponseField>
+    <ResponseField name="purchase_value" type="number">Valeur des achats attribués (USD)</ResponseField>
+    <ResponseField name="roas" type="number | null">
+      ROAS = `purchase_value / spend`. `null` si dépense ou valeur = 0.
+    </ResponseField>
+    <ResponseField name="ctr" type="number | null">
+      CTR en % = `clicks / impressions × 100`. `null` si impressions = 0.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash Top 10 — 30 derniers jours
+curl "https://roapix.up.railway.app/api/v1/winners?date_preset=last_30d&limit=10" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```bash Période personnalisée
+curl "https://roapix.up.railway.app/api/v1/winners?since=2026-03-01&until=2026-03-23" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/winners",
+    params={"date_preset": "last_7d", "limit": 5},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+for ad in r.json()["data"]:
+    print(f"#{ad['rank']} {ad['ad_name']} — ROAS: {ad['roas']} — Spend: ${ad['spend']}")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "rank": 1,
+      "ad_name": "Felipet Cat — Video UGC v3",
+      "spend": 3200.00,
+      "impressions": 580000,
+      "clicks": 11600,
+      "purchases": 82,
+      "purchase_value": 9840.00,
+      "roas": 3.08,
+      "ctr": 2.0
+    },
+    {
+      "rank": 2,
+      "ad_name": "Felipet Dog — Carousel FR",
+      "spend": 2000.50,
+      "impressions": 360000,
+      "clicks": 6120,
+      "purchases": 44,
+      "purchase_value": 4400.00,
+      "roas": 2.20,
+      "ctr": 1.7
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

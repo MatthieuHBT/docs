@@ -1,0 +1,51 @@
+---
+title: Introduction
+description: Interrogez vos données Roapix depuis n'importe quel outil externe.
+---
+
+## Bienvenue sur l'API Roapix
+
+L'API Roapix vous permet d'accéder à vos données de reporting directement depuis vos propres outils — scripts Python, Zapier, Make, Google Sheets, dashboards personnalisés, etc.
+
+<CardGroup cols={2}>
+  <Card title="Authentification" icon="key" href="/authentication">
+    Générez une clé API depuis vos paramètres et commencez en 2 minutes.
+  </Card>
+  <Card title="Dépenses Meta" icon="chart-bar" href="/api-reference/spend">
+    Récupérez vos dépenses publicitaires par compte, marché et produit.
+  </Card>
+  <Card title="Revenus Shopify" icon="bag-shopping" href="/api-reference/revenue">
+    Accédez à vos données de revenus et commandes Shopify.
+  </Card>
+  <Card title="Meilleures pubs" icon="trophy" href="/api-reference/winners">
+    Identifiez vos publicités les plus performantes sur n'importe quelle période.
+  </Card>
+</CardGroup>
+
+## Base URL
+
+```
+https://roapix.up.railway.app/api/v1
+```
+
+## Format des réponses
+
+Toutes les réponses sont en JSON et suivent cette structure :
+
+```json
+{
+  "data": { ... },
+  "workspace_id": "uuid-de-votre-workspace",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+
+## Rate limiting
+
+**60 requêtes par minute** par clé API. Les headers de réponse indiquent votre consommation :
+
+| Header | Description |
+|--------|-------------|
+| `RateLimit-Limit` | Limite par fenêtre |
+| `RateLimit-Remaining` | Requêtes restantes |
+| `RateLimit-Reset` | Timestamp de reset |

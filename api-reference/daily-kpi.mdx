@@ -1,0 +1,100 @@
+---
+title: KPI Journaliers
+api: GET https://roapix.up.railway.app/api/v1/daily-kpi
+description: Récupère les entrées KPI journalières (saisies manuelles ou automatiques) sur une période.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField query="date_preset" type="string">
+  Raccourci de période. Valeurs : `today`, `yesterday`, `last_7d`, `last_30d`.
+  Ignoré si `since` et `until` sont fournis.
+</ParamField>
+
+<ParamField query="since" type="string">
+  Date de début au format `YYYY-MM-DD`. Ex : `2026-03-01`
+</ParamField>
+
+<ParamField query="until" type="string">
+  Date de fin au format `YYYY-MM-DD`. Ex : `2026-03-23`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  Liste des entrées KPI pour la période.
+  <Expandable title="Propriétés de chaque item">
+    <ResponseField name="date" type="string">Date de l'entrée (`YYYY-MM-DD`)</ResponseField>
+    <ResponseField name="employee_id" type="string | null">ID du membre associé</ResponseField>
+    <ResponseField name="employee_name" type="string | null">Nom du membre</ResponseField>
+    <ResponseField name="role" type="string | null">Rôle (ex : `media_buyer`, `manager`)</ResponseField>
+    <ResponseField name="product" type="string | null">Produit concerné</ResponseField>
+    <ResponseField name="market" type="string | null">Marché (code pays)</ResponseField>
+    <ResponseField name="spend" type="number | null">Dépense publicitaire du jour</ResponseField>
+    <ResponseField name="revenue" type="number | null">Revenu du jour</ResponseField>
+    <ResponseField name="roas" type="number | null">ROAS calculé</ResponseField>
+    <ResponseField name="notes" type="string | null">Notes libres saisies pour ce jour</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash 7 derniers jours
+curl "https://roapix.up.railway.app/api/v1/daily-kpi?date_preset=last_7d" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```bash Période personnalisée
+curl "https://roapix.up.railway.app/api/v1/daily-kpi?since=2026-03-01&until=2026-03-23" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/daily-kpi",
+    params={"date_preset": "last_30d"},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+entries = r.json()["data"]
+for e in entries:
+    print(f"{e['date']} | {e['product']} | ROAS: {e['roas']} | Notes: {e['notes']}")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "date": "2026-03-23",
+      "employee_id": "uuid-...",
+      "employee_name": "Aymeric",
+      "role": "media_buyer",
+      "product": "Felipet Cat",
+      "market": "FR",
+      "spend": 420.00,
+      "revenue": 1260.00,
+      "roas": 3.0,
+      "notes": "Bon jour, scaling video UGC v3"
+    },
+    {
+      "date": "2026-03-22",
+      "employee_id": "uuid-...",
+      "employee_name": "Aymeric",
+      "role": "media_buyer",
+      "product": "Felipet Dog",
+      "market": "DE",
+      "spend": 180.00,
+      "revenue": 360.00,
+      "roas": 2.0,
+      "notes": null
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

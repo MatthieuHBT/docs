@@ -1,0 +1,74 @@
+---
+title: Authentification
+description: Comment générer et utiliser vos clés API Roapix.
+---
+
+## Générer une clé API
+
+1. Connectez-vous sur [roapix.up.railway.app](https://roapix.up.railway.app)
+2. Allez dans **Paramètres → API Keys**
+3. Cliquez sur **Générer**, donnez un nom à votre clé (ex : "Zapier", "Script Python")
+4. **Copiez la clé immédiatement** — elle ne sera plus affichée
+
+<Warning>
+  La clé complète n'est visible qu'une seule fois lors de sa création. Si vous la perdez, révoquez-la et créez-en une nouvelle.
+</Warning>
+
+## Utiliser votre clé
+
+Ajoutez votre clé dans le header `Authorization` de chaque requête :
+
+```bash
+Authorization: Bearer roapix_votre_clé_ici
+```
+
+Ou via le header alternatif `X-Api-Key` :
+
+```bash
+X-Api-Key: roapix_votre_clé_ici
+```
+
+## Exemples
+
+<CodeGroup>
+
+```bash cURL
+curl https://roapix.up.railway.app/api/v1/me \
+  -H "Authorization: Bearer roapix_votre_clé_ici"
+```
+
+```python Python
+import requests
+
+headers = {"Authorization": "Bearer roapix_votre_clé_ici"}
+r = requests.get("https://roapix.up.railway.app/api/v1/spend",
+    params={"date_preset": "last_7d"},
+    headers=headers)
+print(r.json())
+```
+
+```javascript JavaScript
+const res = await fetch('https://roapix.up.railway.app/api/v1/spend?date_preset=last_7d', {
+  headers: { 'Authorization': 'Bearer roapix_votre_clé_ici' }
+})
+const data = await res.json()
+```
+
+```js Make / Zapier
+// Dans le module HTTP Request :
+// URL: https://roapix.up.railway.app/api/v1/spend
+// Headers: Authorization: Bearer roapix_votre_clé_ici
+// Params: date_preset=last_7d
+```
+
+</CodeGroup>
+
+## Révoquer une clé
+
+Dans **Paramètres → API Keys**, cliquez sur l'icône de suppression à côté de la clé à révoquer. La révocation est immédiate — toutes les requêtes utilisant cette clé retourneront `401`.
+
+## Sécurité
+
+- Ne committez jamais vos clés dans un repository Git
+- Utilisez des variables d'environnement pour les stocker
+- Créez une clé par application/intégration — facilitera la révocation si nécessaire

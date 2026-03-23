@@ -1,0 +1,99 @@
+---
+title: Dépenses Meta
+api: GET https://roapix.up.railway.app/api/v1/spend
+description: Récupère les dépenses publicitaires Meta agrégées par compte, marché et produit.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField query="date_preset" type="string">
+  Raccourci de période. Valeurs : `today`, `yesterday`, `last_7d`, `last_30d`.
+  Ignoré si `since` et `until` sont fournis.
+</ParamField>
+
+<ParamField query="since" type="string">
+  Date de début au format `YYYY-MM-DD`. Ex : `2026-03-01`
+</ParamField>
+
+<ParamField query="until" type="string">
+  Date de fin au format `YYYY-MM-DD`. Ex : `2026-03-23`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriétés">
+    <ResponseField name="since" type="string | null">Date de début utilisée</ResponseField>
+    <ResponseField name="until" type="string | null">Date de fin utilisée</ResponseField>
+    <ResponseField name="total_spend" type="number">Dépense totale en USD sur la période</ResponseField>
+    <ResponseField name="total_daily_budget" type="number">Budget journalier total configuré</ResponseField>
+    <ResponseField name="by_account" type="array">
+      Agrégat par compte publicitaire, trié par dépense décroissante.
+      Chaque item : `{ account, spend, impressions, clicks }`
+    </ResponseField>
+    <ResponseField name="by_product" type="array">
+      Agrégat par produit. Chaque item : `{ product, spend }`
+    </ResponseField>
+    <ResponseField name="by_market" type="array">
+      Agrégat par marché (code pays). Chaque item : `{ market, spend }`
+    </ResponseField>
+    <ResponseField name="campaigns" type="array">
+      Détail brut par campagne/jour (données complètes du dashboard).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash Derniers 7 jours
+curl "https://roapix.up.railway.app/api/v1/spend?date_preset=last_7d" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```bash Période personnalisée
+curl "https://roapix.up.railway.app/api/v1/spend?since=2026-03-01&until=2026-03-23" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/spend",
+    params={"date_preset": "last_30d"},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+data = r.json()["data"]
+print(f"Total spend: ${data['total_spend']:,.2f}")
+print(f"By market: {data['by_market']}")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "since": "2026-03-17",
+    "until": "2026-03-23",
+    "total_spend": 8420.50,
+    "total_daily_budget": 1200.00,
+    "by_account": [
+      { "account": "FR Compte Principal", "spend": 5200.00, "impressions": 940000, "clicks": 18200 },
+      { "account": "DE Compte", "spend": 3220.50, "impressions": 610000, "clicks": 11400 }
+    ],
+    "by_product": [
+      { "product": "Felipet Cat", "spend": 5100.00 },
+      { "product": "Felipet Dog", "spend": 3320.50 }
+    ],
+    "by_market": [
+      { "market": "FR", "spend": 5200.00 },
+      { "market": "DE", "spend": 3220.50 }
+    ],
+    "campaigns": [ ... ]
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>
