@@ -54,14 +54,9 @@
               "api-reference/summary",
               "api-reference/sync-history",
               "api-reference/sync-trigger",
-              {
-                "group": "Membres",
-                "pages": [
-                  "api-reference/members",
-                  "api-reference/members-update",
-                  "api-reference/members-delete"
-                ]
-              }
+              "api-reference/members",
+              "api-reference/members-update",
+              "api-reference/members-delete"
             ]
           },
           {
@@ -116,32 +111,27 @@
             ]
           },
           {
-            "group": "Configuration",
+            "group": "Alertes",
             "pages": [
-              {
-                "group": "Alertes",
-                "pages": [
-                  "api-reference/alerts",
-                  "api-reference/alerts-create",
-                  "api-reference/alerts-update",
-                  "api-reference/alerts-delete"
-                ]
-              },
-              {
-                "group": "Taux de Change",
-                "pages": [
-                  "api-reference/exchange-rates",
-                  "api-reference/exchange-rates-update"
-                ]
-              },
-              {
-                "group": "Fusions Produits",
-                "pages": [
-                  "api-reference/product-merges",
-                  "api-reference/product-merges-create",
-                  "api-reference/product-merges-delete"
-                ]
-              }
+              "api-reference/alerts",
+              "api-reference/alerts-create",
+              "api-reference/alerts-update",
+              "api-reference/alerts-delete"
+            ]
+          },
+          {
+            "group": "Taux de Change",
+            "pages": [
+              "api-reference/exchange-rates",
+              "api-reference/exchange-rates-update"
+            ]
+          },
+          {
+            "group": "Fusions Produits",
+            "pages": [
+              "api-reference/product-merges",
+              "api-reference/product-merges-create",
+              "api-reference/product-merges-delete"
             ]
           }
         ]
