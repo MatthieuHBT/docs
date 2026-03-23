@@ -1,0 +1,60 @@
+---
+title: Révoquer une clé API
+api: DELETE https://roapix.up.railway.app/api/v1/api-keys/{id}
+description: Révoque et supprime définitivement une clé API.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField path="id" type="string" required>
+  UUID de la clé API à révoquer.
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriétés">
+    <ResponseField name="deleted" type="boolean">`true` si la clé a bien été révoquée</ResponseField>
+    <ResponseField name="id" type="string">UUID de la clé supprimée</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Warning>
+  Vous ne pouvez pas révoquer la clé API actuellement utilisée pour effectuer cette
+  requête. Toute suppression est définitive et immédiate — les intégrations utilisant
+  cette clé cesseront de fonctionner.
+</Warning>
+
+<RequestExample>
+```bash cURL
+curl -X DELETE "https://roapix.up.railway.app/api/v1/api-keys/key-uuid-1..." \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+key_id = "key-uuid-1..."
+r = requests.delete(
+    f"https://roapix.up.railway.app/api/v1/api-keys/{key_id}",
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+result = r.json()["data"]
+print(f"Clé révoquée : {result['id']}")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": {
+    "deleted": true,
+    "id": "key-uuid-1..."
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

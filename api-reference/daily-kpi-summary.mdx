@@ -1,0 +1,87 @@
+---
+title: Résumé KPI
+api: GET https://roapix.up.railway.app/api/v1/daily-kpi/summary
+description: Agrégation des KPI journaliers par rôle, produit, employé ou marché.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField query="since" type="string">
+  Date de début au format `YYYY-MM-DD`. Ex : `2026-03-01`
+</ParamField>
+
+<ParamField query="until" type="string">
+  Date de fin au format `YYYY-MM-DD`. Ex : `2026-03-23`
+</ParamField>
+
+<ParamField query="date_preset" type="string">
+  Raccourci de période. Valeurs : `today`, `yesterday`, `last_7d`, `last_30d`.
+  Ignoré si `since` et `until` sont fournis.
+</ParamField>
+
+<ParamField query="group_by" type="string" default="role">
+  Dimension d'agrégation. Valeurs : `role`, `product`, `employee`, `market`.
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  Liste des agrégats pour la dimension choisie.
+  <Expandable title="Propriétés de chaque item">
+    <ResponseField name="dimension" type="string">Valeur de la dimension (ex : `media_buyer`, `Felipet Cat`, `FR`)</ResponseField>
+    <ResponseField name="count" type="number">Nombre de membres ou entités dans cette dimension</ResponseField>
+    <ResponseField name="entries_count" type="number">Nombre total d'entrées KPI pour cette dimension sur la période</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash Par rôle (défaut)
+curl "https://roapix.up.railway.app/api/v1/daily-kpi/summary?date_preset=last_7d" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```bash Par produit
+curl "https://roapix.up.railway.app/api/v1/daily-kpi/summary?date_preset=last_30d&group_by=product" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/daily-kpi/summary",
+    params={"date_preset": "last_30d", "group_by": "market"},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+for item in r.json()["data"]:
+    print(f"{item['dimension']} — {item['entries_count']} entrées")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 — groupé par rôle
+{
+  "data": [
+    {
+      "dimension": "media_buyer",
+      "count": 3,
+      "entries_count": 42
+    },
+    {
+      "dimension": "manager",
+      "count": 1,
+      "entries_count": 7
+    },
+    {
+      "dimension": "creative",
+      "count": 2,
+      "entries_count": 14
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

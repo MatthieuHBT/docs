@@ -1,0 +1,64 @@
+---
+title: Déclencher un Sync
+api: POST https://roapix.up.railway.app/api/v1/sync
+description: Lance manuellement un sync Meta Ads pour votre workspace.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+Aucun body requis — envoyez simplement la requête POST avec votre clé d'authentification.
+
+## Réponse
+
+<ResponseField name="triggered" type="boolean">
+  `true` si le sync a bien été déclenché.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Message de confirmation : `"Sync started in background"`
+</ResponseField>
+
+<Note>
+  Le sync s'exécute en arrière-plan de manière asynchrone. Utilisez l'endpoint
+  [/sync-history](/api-reference/sync-history) pour suivre l'avancement et vérifier
+  que le sync s'est terminé avec succès.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl -X POST "https://roapix.up.railway.app/api/v1/sync" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+import time
+
+r = requests.post(
+    "https://roapix.up.railway.app/api/v1/sync",
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+print(r.json()["message"])
+
+# Attendre puis vérifier le statut
+time.sleep(30)
+history = requests.get(
+    "https://roapix.up.railway.app/api/v1/sync-history",
+    params={"limit": 1},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+last = history.json()["data"][0]
+print(f"Statut : {last['status']} — {last['campaigns_count']} campagnes importées")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 202
+{
+  "triggered": true,
+  "message": "Sync started in background"
+}
+```
+</ResponseExample>

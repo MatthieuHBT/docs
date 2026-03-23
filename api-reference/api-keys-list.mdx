@@ -1,0 +1,73 @@
+---
+title: Lister les clés API
+api: GET https://roapix.up.railway.app/api/v1/api-keys
+description: Lister toutes les clés API actives du workspace.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  Liste des clés API du workspace.
+  <Expandable title="Propriétés de chaque clé">
+    <ResponseField name="id" type="string">UUID de la clé API</ResponseField>
+    <ResponseField name="name" type="string">Label de la clé (défini à la création)</ResponseField>
+    <ResponseField name="prefix" type="string">Préfixe visible de la clé (ex : `roapix_abc1...`)</ResponseField>
+    <ResponseField name="created_at" type="string">Date de création (ISO 8601)</ResponseField>
+    <ResponseField name="last_used_at" type="string | null">Date de dernière utilisation (ISO 8601), ou `null` si jamais utilisée</ResponseField>
+    <ResponseField name="is_active" type="boolean">Indique si la clé est active</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Note>
+  Le secret complet de la clé n'est jamais retourné après sa création. Seul le préfixe
+  est visible pour identifier la clé.
+</Note>
+
+<RequestExample>
+```bash cURL
+curl "https://roapix.up.railway.app/api/v1/api-keys" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/api-keys",
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+for key in r.json()["data"]:
+    print(f"{key['name']} — {key['prefix']} — actif: {key['is_active']}")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "id": "key-uuid-1...",
+      "name": "Production",
+      "prefix": "roapix_abc1...",
+      "created_at": "2026-01-15T10:00:00.000Z",
+      "last_used_at": "2026-03-23T14:30:00.000Z",
+      "is_active": true
+    },
+    {
+      "id": "key-uuid-2...",
+      "name": "Zapier Integration",
+      "prefix": "roapix_xyz9...",
+      "created_at": "2026-02-20T09:00:00.000Z",
+      "last_used_at": null,
+      "is_active": true
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

@@ -1,0 +1,67 @@
+---
+title: Créer une clé API
+api: POST https://roapix.up.railway.app/api/v1/api-keys
+description: Génère une nouvelle clé API. Le secret n'est retourné qu'une seule fois.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField body="name" type="string" required>
+  Label descriptif pour identifier la clé. Ex : `Production`, `Zapier Integration`.
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriétés">
+    <ResponseField name="id" type="string">UUID de la clé créée</ResponseField>
+    <ResponseField name="name" type="string">Label de la clé</ResponseField>
+    <ResponseField name="key" type="string">Clé secrète complète au format `roapix_...` — **à sauvegarder immédiatement**</ResponseField>
+    <ResponseField name="created_at" type="string">Date de création (ISO 8601)</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Warning>
+  Le secret complet de la clé n'est retourné **qu'une seule fois**, à la création.
+  Sauvegardez-le immédiatement dans un endroit sécurisé — il ne pourra plus être
+  récupéré ensuite.
+</Warning>
+
+<RequestExample>
+```bash cURL
+curl -X POST "https://roapix.up.railway.app/api/v1/api-keys" \
+  -H "Authorization: Bearer roapix_votre_clé" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Production"}'
+```
+
+```python Python
+import requests
+
+r = requests.post(
+    "https://roapix.up.railway.app/api/v1/api-keys",
+    json={"name": "Production"},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+result = r.json()["data"]
+print(f"Clé créée : {result['key']}")
+print("Sauvegardez cette clé maintenant — elle ne sera plus visible !")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 201
+{
+  "data": {
+    "id": "key-uuid-new...",
+    "name": "Production",
+    "key": "roapix_sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "created_at": "2026-03-23T20:00:00.000Z"
+  },
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T20:00:00.000Z"
+}
+```
+</ResponseExample>

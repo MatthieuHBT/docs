@@ -1,0 +1,125 @@
+---
+title: Lister les campagnes
+api: GET https://roapix.up.railway.app/api/v1/campaigns
+description: Liste toutes les campagnes avec dépenses, ROAS et métriques clés.
+---
+
+<ParamField header="Authorization" type="string" required>
+  `Bearer roapix_votre_clé`
+</ParamField>
+
+<ParamField query="since" type="string">
+  Date de début au format `YYYY-MM-DD`. Ex : `2026-03-01`
+</ParamField>
+
+<ParamField query="until" type="string">
+  Date de fin au format `YYYY-MM-DD`. Ex : `2026-03-23`
+</ParamField>
+
+<ParamField query="date_preset" type="string">
+  Raccourci de période. Valeurs : `today`, `yesterday`, `last_7d`, `last_30d`.
+  Ignoré si `since` et `until` sont fournis.
+</ParamField>
+
+<ParamField query="product" type="string">
+  Filtre par produit. Ex : `Felipet Cat`
+</ParamField>
+
+<ParamField query="market" type="string">
+  Filtre par marché (code pays). Ex : `FR`
+</ParamField>
+
+<ParamField query="account_id" type="string">
+  Filtre par identifiant de compte publicitaire.
+</ParamField>
+
+<ParamField query="limit" type="number" default="500">
+  Nombre maximum de campagnes à retourner. Max : `2000`.
+</ParamField>
+
+## Réponse
+
+<ResponseField name="data" type="array">
+  Liste des campagnes pour la période.
+  <Expandable title="Propriétés de chaque campagne">
+    <ResponseField name="campaign_id" type="string">Identifiant unique de la campagne</ResponseField>
+    <ResponseField name="campaign_name" type="string">Nom de la campagne</ResponseField>
+    <ResponseField name="account" type="string">Nom du compte publicitaire</ResponseField>
+    <ResponseField name="product" type="string | null">Produit associé à la campagne</ResponseField>
+    <ResponseField name="market" type="string | null">Marché ciblé (code pays)</ResponseField>
+    <ResponseField name="spend" type="number">Dépense totale sur la période (USD)</ResponseField>
+    <ResponseField name="impressions" type="number">Nombre d'impressions</ResponseField>
+    <ResponseField name="clicks" type="number">Nombre de clics</ResponseField>
+    <ResponseField name="purchases" type="number">Nombre d'achats générés</ResponseField>
+    <ResponseField name="purchase_value" type="number">Valeur totale des achats (USD)</ResponseField>
+    <ResponseField name="roas" type="number | null">ROAS calculé (`purchase_value / spend`)</ResponseField>
+    <ResponseField name="ctr" type="number | null">Taux de clic (`clicks / impressions`)</ResponseField>
+    <ResponseField name="status" type="string">Statut de la campagne (`ACTIVE`, `PAUSED`, etc.)</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash Derniers 7 jours
+curl "https://roapix.up.railway.app/api/v1/campaigns?date_preset=last_7d" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```bash Filtré par produit et marché
+curl "https://roapix.up.railway.app/api/v1/campaigns?since=2026-03-01&until=2026-03-23&product=Felipet+Cat&market=FR" \
+  -H "Authorization: Bearer roapix_votre_clé"
+```
+
+```python Python
+import requests
+
+r = requests.get(
+    "https://roapix.up.railway.app/api/v1/campaigns",
+    params={"date_preset": "last_30d", "market": "FR", "limit": 100},
+    headers={"Authorization": "Bearer roapix_votre_clé"}
+)
+campaigns = r.json()["data"]
+for c in campaigns:
+    print(f"{c['campaign_name']} | Spend: ${c['spend']:,.2f} | ROAS: {c['roas']}")
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "data": [
+    {
+      "campaign_id": "23851234567890",
+      "campaign_name": "Felipet Cat — FR — Video UGC v3",
+      "account": "FR Compte Principal",
+      "product": "Felipet Cat",
+      "market": "FR",
+      "spend": 1420.50,
+      "impressions": 320000,
+      "clicks": 6400,
+      "purchases": 142,
+      "purchase_value": 5964.00,
+      "roas": 4.20,
+      "ctr": 0.02,
+      "status": "ACTIVE"
+    },
+    {
+      "campaign_id": "23851234567891",
+      "campaign_name": "Felipet Dog — DE — Catalog",
+      "account": "DE Compte",
+      "product": "Felipet Dog",
+      "market": "DE",
+      "spend": 890.00,
+      "impressions": 185000,
+      "clicks": 3200,
+      "purchases": 67,
+      "purchase_value": 2137.00,
+      "roas": 2.40,
+      "ctr": 0.017,
+      "status": "ACTIVE"
+    }
+  ],
+  "workspace_id": "a1b2c3d4-...",
+  "generated_at": "2026-03-23T14:00:00.000Z"
+}
+```
+</ResponseExample>

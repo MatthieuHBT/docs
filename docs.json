@@ -53,6 +53,7 @@
               "api-reference/me",
               "api-reference/summary",
               "api-reference/sync-history",
+              "api-reference/sync-trigger",
               {
                 "group": "Membres",
                 "pages": [
@@ -64,8 +65,17 @@
             ]
           },
           {
+            "group": "API Keys",
+            "pages": [
+              "api-reference/api-keys-list",
+              "api-reference/api-keys-create",
+              "api-reference/api-keys-delete"
+            ]
+          },
+          {
             "group": "Advertising",
             "pages": [
+              "api-reference/campaigns",
               "api-reference/spend",
               "api-reference/accounts",
               "api-reference/products",
@@ -89,6 +99,7 @@
             "group": "KPI Journaliers",
             "pages": [
               "api-reference/daily-kpi",
+              "api-reference/daily-kpi-summary",
               "api-reference/daily-kpi-create",
               "api-reference/daily-kpi-update",
               "api-reference/daily-kpi-delete"
